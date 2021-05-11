@@ -22,3 +22,4 @@ kernelmemfs
 xv6memfs.img
 mkfs
 .gdbinit
+./.idea/
