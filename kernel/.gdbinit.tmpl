@@ -25,6 +25,5 @@ target remote localhost:1234
 echo + symbol-file kernel\n
 set architecture i386
 file kernel
-b setupkvm
-b vm.c:68
+b mp.c:123
 layout split

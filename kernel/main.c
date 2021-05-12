@@ -11,6 +11,9 @@ int main(void)
 {
     kinit1(end,P2V(4 * 1024 * 1024));
     kvmalloc();
+    mpinit();
+    lapicinit();
+    seginit();
     uartinit();
     cgainit();
     consoleinit();

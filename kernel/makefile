@@ -1,8 +1,11 @@
 OBJS = \
 	string.o\
 	cga.o\
+	lapic.o\
+	ioapic.o\
 	mp.o\
 	kalloc.o\
+	proc.o\
 	vm.o\
 	uart.o\
 	console.o\
