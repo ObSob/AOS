@@ -5,20 +5,23 @@
 #include "x86.h"
 
 extern pde_t entrypgdir[];  // For entry.S
-
+extern int end[];
 
 int main(void)
 {
+    kinit1(end,P2V(4 * 1024 * 1024));
+    kvmalloc();
     uartinit();
     cgainit();
     consoleinit();
     cprintf("This is the BSP.\n");
 
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < 5; i++) {
         cprintf("This is the %d.\n", i);
     }
-//    uint low = lowmem();
-//    cprintf("low %d\n", low);
+
+
+    //    kinit2(P2V(4 * 1024 * 1024), P2V(PHYSTOP)); // init after SMP init
 
     while (1) {
         asm volatile("hlt");

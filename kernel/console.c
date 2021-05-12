@@ -69,7 +69,7 @@ consputc(int c)
         uartputc('\b'); uartputc(' '); uartputc('\b');
     } else
         uartputc(c);
-    vgaputc(c);
+    cgaputc(c);
 }
 
 void

@@ -19,6 +19,7 @@
 #define CR4_PSE         0x00000010      // Page size extension
 
 // various segment selectors.
+#define SEG_ZERO  0  // always zero
 #define SEG_KCODE 1  // kernel code
 #define SEG_KDATA 2  // kernel data+stack
 #define SEG_UCODE 3  // user code
@@ -57,6 +58,7 @@ struct segdesc {
   (uint)(lim) >> 16, 0, 0, 1, 0, (uint)(base) >> 24 }
 #endif
 
+#define DPL_KERN    0x0     // Kernel DPL
 #define DPL_USER    0x3     // User DPL
 
 // Application segment type bits
@@ -87,9 +89,9 @@ struct segdesc {
 #define PGADDR(d, t, o) ((uint)((d) << PDXSHIFT | (t) << PTXSHIFT | (o)))
 
 // Page directory and page table constants.
-#define NPDENTRIES      1024    // # directory entries per page directory
-#define NPTENTRIES      1024    // # PTEs per page table
 #define PGSIZE          4096    // bytes mapped by a page
+#define NPDENTRIES      (PGSIZE/sizeof(pde_t))    // # directory entries per page directory
+#define NPTENTRIES      (PGSIZE/sizeof(pte_t))    // # PTEs per page table
 
 #define PTXSHIFT        12      // offset of PTX in a linear address
 #define PDXSHIFT        22      // offset of PDX in a linear address
@@ -98,10 +100,14 @@ struct segdesc {
 #define PGROUNDDOWN(a) (((a)) & ~(PGSIZE-1))
 
 // Page table/directory entry flags.
-#define PTE_P           0x001   // Present
-#define PTE_W           0x002   // Writeable
-#define PTE_U           0x004   // User
-#define PTE_PS          0x080   // Page Size
+#define PTE_P           1 << 0  // Present
+#define PTE_W           1 << 1  // Writeable
+#define PTE_U           1 << 2  // User
+#define PTE_WT          1 << 3  // 1: write throuth, 0: write back
+#define PTE_CD          1 << 4  // Cache disable
+#define PTE_A           1 << 5  // Accessed
+#define PTE_D           1 << 6  // Dirty
+#define PTE_PS          1 << 7  // Page Size
 
 // Address in page table or page directory entry
 #define PTE_ADDR(pte)   ((uint)(pte) & ~0xFFF)

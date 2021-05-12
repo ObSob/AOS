@@ -149,17 +149,6 @@ lcr3(uint val)
     asm volatile("movl %0,%%cr3" : : "r" (val));
 }
 
-// detect the low memory, result is in ax
-static inline uint
-lowmem(void)
-{
-    asm volatile("clc" : : : "cc");
-    asm volatile("int $0x12" : : :"eax");
-    register int eax asm("eax");
-    return eax;
-}
-
-//PAGEBREAK: 36
 // Layout of the trap frame built on the stack by the
 // hardware and by trapasm.S, and passed to trap().
 struct trapframe {

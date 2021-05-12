@@ -22,9 +22,9 @@ end
 
 echo + target remote localhost:1234\n
 target remote localhost:1234
-
 echo + symbol-file kernel\n
 set architecture i386
 file kernel
-b entry.S:33
+b setupkvm
+b vm.c:68
 layout split

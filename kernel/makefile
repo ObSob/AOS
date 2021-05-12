@@ -1,6 +1,9 @@
 OBJS = \
 	string.o\
-	vga.o\
+	cga.o\
+	mp.o\
+	kalloc.o\
+	vm.o\
 	uart.o\
 	console.o\
 	main.o\
