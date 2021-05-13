@@ -102,7 +102,7 @@ lapicid(void)
 
 // acknowledge interrupt
 void
-lapiceio(void)
+lapiceoi(void)
 {
     if (lapic)
         lapicw(EOI, 0);

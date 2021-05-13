@@ -28,6 +28,9 @@ void            kfree(char *);
 void            kinit1(void *, void *);
 void            kinit2(void *, void *);
 
+// kbd.c
+void            kbdintr(void);
+
 // lapic.c
 void            cmostime(struct rtcdata *r);
 int             lapicid(void);
@@ -41,6 +44,11 @@ void            microdelay(int);
 extern int      ismp;
 void            mpinit(void);
 
+
+// picirq.c
+void            picenable(int);
+void            picinit(void);
+
 // proc.c
 int             cpuid(void);
 struct cpu*     mycpu(void);
@@ -53,6 +61,12 @@ char*           safestrcpy(char*, const char*, int);
 int             strlen(const char*);
 int             strncmp(const char*, const char*, uint);
 char*           strncpy(char*, const char*, int);
+
+//trap.c
+void            idtinit(void);
+extern uint     ticks;
+void tvinit     (void);
+//extern struct spinlock ticklock;
 
 // uart.c
 void            uartinit(void);

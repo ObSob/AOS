@@ -3,12 +3,17 @@ OBJS = \
 	cga.o\
 	lapic.o\
 	ioapic.o\
+	picirq.o\
 	mp.o\
 	kalloc.o\
 	proc.o\
 	vm.o\
 	uart.o\
+	kbd.o\
+	trapasm.o\
+	trap.o\
 	console.o\
+	vectors.o\
 	main.o\
 
 TOOLPREFIX := $(shell echo '')
@@ -20,6 +25,7 @@ OBJCOPY = $(TOOLPREFIX)objcopy
 OBJDUMP = $(TOOLPREFIX)objdump
 CFLAGS = -fno-pic -static -fno-builtin -fno-strict-aliasing -O2 -Wall -MD -ggdb -m32 -Werror -fno-omit-frame-pointer
 CFLAGS += $(shell $(CC) -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 && echo -fno-stack-protector)
+CFLAGS += -Wno-div-by-zero
 ASFLAGS = -m32 -gdwarf-2 -Wa,-divide
 LDFLAGS += -m elf_i386
 
@@ -47,8 +53,8 @@ kernel: $(OBJS) entry.o entryother kernel.ld
 	$(OBJDUMP) -S kernel > kernel.asm
 	$(OBJDUMP) -t kernel | sed '1,/SYMBOL TABLE/d; s/ .* / /; /^$$/d' > kernel.sym
 
-link: boot.o kernel.o
-	$(CC) -m32 -ffreestanding -nostdlib -g -T linker.ld boot.o kernel.o -o mykernel.elf -lgcc
+vectors.S: vectors.pl
+	./vectors.pl > vectors.S
 
 ifndef CPUS
 CPUS := 2

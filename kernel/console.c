@@ -1,6 +1,7 @@
 #include "types.h"
 #include "defs.h"
 #include "x86.h"
+#include "traps.h"
 
 static void consputc(int);
 
@@ -24,9 +25,8 @@ consoleinit(void)
 //    devsw[CONSOLE].read = consoleread;
 //    cons.locking = 1;
 //
-//    ioapicenable(IRQ_KBD, 0);
+    ioapicenable(IRQ_KBD, 0);
 }
-
 
 static void
 printint(int xx, int base, int sign)
@@ -70,6 +70,63 @@ consputc(int c)
     } else
         uartputc(c);
     cgaputc(c);
+}
+
+#define INPUT_BUF 128
+struct {
+    char buf[INPUT_BUF];
+    uint r;     // read index
+    uint w;     // write index
+    uint e;     // edit index
+} input;
+
+// Control-x
+#define C(x) ((x) - '@')
+
+void
+consoleintr(int (*getc)(void))
+{
+    int c, doprocdump = 0;
+
+    //    acquire(&cons.lock);
+    while ((c = getc()) >= 0) {
+        switch (c) {
+            // process listing
+            case C('P'):
+                // procdump() locks cons.lock indirectly; invoke later
+                doprocdump = 1;
+                break;
+            // kill line
+            case C('U'):
+                while (input.buf[(input.e - 1) % INPUT_BUF] != '\n') {
+                    input.e--;
+                    consputc(BACKSPACE);
+                }
+                break;
+            case C('H'):
+            case C('\x7f'): // backspace
+                if (input.e != input.w) {
+                    input.e--;
+                    consputc(BACKSPACE);
+                }
+                break;
+            default:
+                if (c != 0 && input.e - input.r < INPUT_BUF) {
+                    c = (c == '\r') ? '\n' : c;
+                    input.buf[input.e++ % INPUT_BUF] = c;
+                    consputc(c);
+                    if (c == '\n' || c == C('D') || input.e == input.r + INPUT_BUF) {
+                        input.w = input.e;
+//                        wakeup(&input.r);
+                    }
+                }
+                break;
+        }
+    }
+//    release(&cons.lock);
+    if(doprocdump) {
+//        procdump();  // now call procdump() wo. cons.lock held
+    }
 }
 
 void
@@ -132,7 +189,7 @@ panic(char *s)
 
     cli();
     cons.locking = 0;
-//    cprintf("lapicid %d: panic: ", lapicid());
+    cprintf("lapicid %d: panic: ", lapicid());
     cprintf(s);
     cprintf("\n");
 //    getcallerpcs(&s, pcs);

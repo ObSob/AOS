@@ -45,14 +45,22 @@ uartputc(int c)
     if(!uart)
         return;
     for(i = 0; i < 128 && !(inb(COM1+5) & 0x20); i++)
-//        microdelay(10);
-        ;
+        microdelay(10);
     outb(COM1+0, c);
+}
+
+static int
+uartgetc(void)
+{
+    if(!uart)
+        return -1;
+    if(!(inb(COM1+5) & 0x01))
+        return -1;
+    return inb(COM1+0);
 }
 
 void
 uartintr(void)
 {
-    // todo: need idt support
-//    consoleintr(uartgetc);
+    consoleintr(uartgetc);
 }
