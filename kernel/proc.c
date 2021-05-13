@@ -2,7 +2,26 @@
 #include "proc.h"
 #include "x86.h"
 #include "defs.h"
+#include "spinlock.h"
 
+//struct {
+//    struct spinlock lock;
+//    struct proc proc[NPROC];
+//} ptable;
+//
+//static struct proc *initproc;
+//
+//int nextpid = 1;
+//extern void forkret(void);
+//extern void trapret(void);
+//
+//static void wakeup1(void *chan);
+//
+//void
+//pinit(void)
+//{
+//    initlock
+//}
 
 // Must be called with interrupts disabled
 int

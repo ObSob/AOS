@@ -1,7 +1,10 @@
 #ifndef AOS_DEFS_H
 #define AOS_DEFS_H
 
+#include "types.h"
+
 struct rtcdata;
+struct spinlock;
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
@@ -62,10 +65,19 @@ int             strlen(const char*);
 int             strncmp(const char*, const char*, uint);
 char*           strncpy(char*, const char*, int);
 
-//trap.c
+// spinlock.c
+void            initlock(struct spinlock*, char*);
+void            getcallerpcs(void*, uint*);
+int             holding(struct spinlock*);
+void            acquire(struct spinlock*);
+void            release(struct spinlock*);
+void            pushcli(void);
+void            popcli(void);
+
+// trap.c
 void            idtinit(void);
 extern uint     ticks;
-void tvinit     (void);
+void            tvinit(void);
 //extern struct spinlock ticklock;
 
 // uart.c

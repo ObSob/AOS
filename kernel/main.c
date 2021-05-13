@@ -46,9 +46,9 @@ mpenter(void)
 static void
 mpmain(int bsp)
 {
-    cprintf("cpu%d: starting as %s\n", cpuid(), bsp ? "BSP" : "AP");
     idtinit();       // load idt register
     xchg(&(mycpu()->started), 1); // tell startothers() we're up
+    cprintf("cpu%d: starting as %s\n", cpuid(), bsp ? "BSP" : "AP");
 
     while (1) {
         asm volatile("hlt");

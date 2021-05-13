@@ -5,6 +5,7 @@ OBJS = \
 	ioapic.o\
 	picirq.o\
 	mp.o\
+	spinlock.o\
 	kalloc.o\
 	proc.o\
 	vm.o\
@@ -92,4 +93,4 @@ clean:
 	$(UPROGS)
 
 lines:
-	find . -name "*.c" -or -name '*.h' -or -name '*.S' | xargs wc -l
+	find . -name "*.c" -or -name '*.h' -or -name '*.S' -or -name '*.pl' | xargs wc -l

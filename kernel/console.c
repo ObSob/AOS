@@ -2,6 +2,7 @@
 #include "defs.h"
 #include "x86.h"
 #include "traps.h"
+#include "spinlock.h"
 
 static void consputc(int);
 
@@ -10,21 +11,19 @@ static int panicked = 0;
 #define BACKSPACE 0x100
 
 static struct {
-    // todo: need lock support
-//    struct spinlock lock;
+    struct spinlock lock;
     int locking;
 } cons;
 
 void
 consoleinit(void)
 {
-    //todo: need lock and file support
-//    initlock(&cons.lock, "console");
+    initlock(&cons.lock, "console");
 //
 //    devsw[CONSOLE].write = consolewrite;
 //    devsw[CONSOLE].read = consoleread;
-//    cons.locking = 1;
-//
+    cons.locking = 1;
+
     ioapicenable(IRQ_KBD, 0);
 }
 
@@ -136,12 +135,9 @@ cprintf(char *fmt, ...)
     uint *argp;
     char *s;
 
-    // todo: acquire lock here
-
     locking = cons.locking;
     if (locking)
-//        acquire(&cons.lock);
-        ;
+        acquire(&cons.lock);
 
     if (fmt == 0)
         panic("cprinf: null fmt");
@@ -179,22 +175,24 @@ cprintf(char *fmt, ...)
                 break;
         }
     }
+    if(locking)
+        release(&cons.lock);
 }
 
 void
 panic(char *s)
 {
-//    int i;
-//    uint pcs[10];
+    int i;
+    uint pcs[10];
 
     cli();
     cons.locking = 0;
     cprintf("lapicid %d: panic: ", lapicid());
     cprintf(s);
     cprintf("\n");
-//    getcallerpcs(&s, pcs);
-//    for(i=0; i<10; i++)
-//        cprintf(" %p", pcs[i]);
+    getcallerpcs(&s, pcs);
+    for(i=0; i<10; i++)
+        cprintf(" %p", pcs[i]);
     panicked = 1; // freeze other CPU
     for(;;)
         ;
