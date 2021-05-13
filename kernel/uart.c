@@ -1,5 +1,6 @@
 #include "x86.h"
 #include "defs.h"
+#include "traps.h"
 
 #define COM1    0x3f8
 
@@ -8,8 +9,6 @@ static int uart;    // is there a uart?
 void
 uartinit(void)
 {
-    char *p;
-
     // Turn off the FIFO
     outb(COM1+2, 0);
 
@@ -28,13 +27,9 @@ uartinit(void)
 
     // Acknowledge pre-existing interrupt conditions;
     // enable interrupts.
-//    inb(COM1+2);
-//    inb(COM1+0);
-//    ioapicenable(IRQ_COM1, 0);
-
-    // Announce that we're here.
-    for(p="xv6...\n"; *p; p++)
-        uartputc(*p);
+    inb(COM1+2);
+    inb(COM1+0);
+    ioapicenable(IRQ_COM1, 0);
 }
 
 void

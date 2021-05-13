@@ -2,7 +2,7 @@
 #define AOS_PARAM_H
 
 #define NPROC        64  // maximum number of processes
-#define KSTACKSIZE 4096  // size of per-process kernel stack
+#define KSTACKSIZE 4096  // size of per-process kernel stack (one page)
 #define NCPU         12  // maximum number of CPUs (depended on host logical CPUs)
 #define NOFILE       16  // open files per process
 #define NFILE       100  // open files per system

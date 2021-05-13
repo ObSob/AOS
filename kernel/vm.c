@@ -134,7 +134,6 @@ void
 kvmalloc(void)
 {
     kpgdir = setupkvm();
-    cprintf("kernel page table directory at: 0x%p", V2P(kpgdir));
     switchkvm();
 }
 
