@@ -9,6 +9,7 @@ struct spinlock;
 struct sleeplock;
 struct inode;
 struct buf;
+struct superblock;
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
@@ -28,6 +29,9 @@ void            consoleinit(void);
 void            cprintf(char *, ...);
 void            consoleintr(int(*)(void));
 void            panic(char*) __attribute__((noreturn));
+
+// fs.c
+void            readsb(int dev, struct superblock *sb);
 
 
 // ide.c
@@ -59,6 +63,12 @@ void            lapiceoi(void);
 void            lapicinit(void);
 void            lapicstartap(uchar, uint);
 void            microdelay(int);
+
+// log.c
+void            initlog(int dev);
+void            log_write(struct buf*);
+void            begin_op();
+void            end_op();
 
 // mp.c
 extern int      ismp;

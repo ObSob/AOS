@@ -9,6 +9,8 @@ OBJS = \
 	sleeplock.o\
 	ide.o\
 	bio.o\
+	log.o\
+	fs.o\
 	kalloc.o\
 	swtch.o\
 	proc.o\

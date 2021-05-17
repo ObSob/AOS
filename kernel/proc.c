@@ -213,9 +213,8 @@ forkret(void)
         // of a regular process (e.g. they call sleep), and thus connot
         // be run from main();
         first = 0;
-        // todo: need file support
 //        iinit(ROOTDEV);
-//        initlog(ROOTDEV);
+        initlog(ROOTDEV);
     }
 
     // return to "caller", actually trapret (see allocproc)

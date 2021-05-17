@@ -49,7 +49,7 @@ binit(void)
         bcache.head.next = b;
         count++;
     }
-    cprintf("bcache: %d block cache available in total\n", count);
+    cprintf("bcache: %d blocks available in total\n", count);
 }
 
 // look through buffer cache for block on device dev
