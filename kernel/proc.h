@@ -42,7 +42,7 @@ struct context {
 enum procstate {
     UNUSED,
     EMBRTO,
-    SLEPPING,
+    SLEEPING,
     RUNNABLE,
     RUNNING,
     ZOMBIE,

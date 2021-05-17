@@ -7,6 +7,7 @@ OBJS = \
 	mp.o\
 	spinlock.o\
 	kalloc.o\
+	swtch.o\
 	proc.o\
 	vm.o\
 	uart.o\
@@ -26,8 +27,8 @@ OBJCOPY = $(TOOLPREFIX)objcopy
 OBJDUMP = $(TOOLPREFIX)objdump
 CFLAGS = -fno-pic -static -fno-builtin -fno-strict-aliasing -O2 -Wall -MD -ggdb -m32 -Werror -fno-omit-frame-pointer
 CFLAGS += $(shell $(CC) -fno-stack-protector -E -x c /dev/null >/dev/null 2>&1 && echo -fno-stack-protector)
-# CFLAGS += -Wno-div-by-zero
-ASFLAGS = -m32 -gdwarf-2 -Wa,-divide
+CFLAGS += -Wno-div-by-zero -Wno-unused-function
+ASFLAGS = -m32 -gdwarf-2 -Wa,-divide -mno-mmx -mno-sse
 LDFLAGS += -m elf_i386
 
 xv6.img: bootblock kernel

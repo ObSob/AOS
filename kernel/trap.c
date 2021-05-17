@@ -3,11 +3,12 @@
 #include "traps.h"
 #include "x86.h"
 #include "defs.h"
+#include "spinlock.h"
 
 //interrupt descriptor table (shared by all CPUs)
 struct gatedesc idt[256];
 extern uint vectors[];      // in vector.S: array of 256 entry pointers
-//struct spinlock tickslock;
+struct spinlock tickslock;
 uint ticks;
 
 void
@@ -19,7 +20,7 @@ tvinit(void)
         SETGATE(idt[i], 0, SEG_KCODE<<3, vectors[i], 0);
     SETGATE(idt[T_SYSCALL], 1, SEG_KCODE<<3, vectors[T_SYSCALL], DPL_USER);
 
-//    initlock(&tickslock, "time");
+    initlock(&tickslock, "time");
 }
 
 void
@@ -37,10 +38,10 @@ trap(struct trapframe *tf)
     switch (tf->trapno) {
         case T_IRQ0 + IRQ_TIMER:
             if(cpuid() == 0){
-    //            acquire(&tickslock);
+                acquire(&tickslock);
                 ticks++;
     //            wakeup(&ticks);
-    //            release(&tickslock);
+                release(&tickslock);
             }
             cprintf("trap: this is a tick interrupt\n");
             lapiceoi();

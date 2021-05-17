@@ -54,7 +54,7 @@ walkpgdir(pde_t *pgdir, const void *va, int alloc)
 // Create PTEs for virtual addresses starting at va that refer to
 // physical addresses starting at pa. va and size might not be page-aligned.
 static int
-mmapages(pde_t *pgdir, void *va, uint size, uint pa, int perm)
+mappages(pde_t *pgdir, void *va, uint size, uint pa, int perm)
 {
     char *a, *last;
     pte_t *pte;
@@ -65,7 +65,7 @@ mmapages(pde_t *pgdir, void *va, uint size, uint pa, int perm)
         if ((pte = walkpgdir(pgdir, a, 1)) == 0)
             return -1;
         if (*pte & PTE_P)
-            panic("mmapages: remap");
+            panic("mappages: remap");
         *pte = pa | perm | PTE_P;
         if (a == last)
             break;
@@ -121,7 +121,7 @@ setupkvm(void)
     if (P2V(PHYSTOP) > (void*)DEVSPACE)
         panic("PHYSTOP to high");
     for (k = kmap; k < &kmap[NELEM(kmap)]; k++) {
-        if (mmapages(pgdir, k->virt,  k->phys_end - k->phys_start, (uint)k->phys_start, k->perm) < 0) {
+        if (mappages(pgdir, k->virt, k->phys_end - k->phys_start, (uint) k->phys_start, k->perm) < 0) {
             freevm(pgdir);
             return 0;
         }
@@ -145,7 +145,55 @@ switchkvm(void)
 }
 
 // switch TSS and h/w page table to correspond to process p
+void
+switchuvm(struct proc *p)
+{
+    if (p == 0)
+        panic("switchuvm: no process");
+    if (p->kstack == 0)
+        panic("switchuvm: no kstack");
+    if (p->pgdir == 0)
+        panic("switchuvm: no pgdir");
 
+    pushcli();
+    mycpu()->gdt[SEG_TSS] = SEG16(STS_T32A, &mycpu()->ts, sizeof(mycpu()->ts)-1, 0);
+    mycpu()->gdt[SEG_TSS].s = 0;
+    mycpu()->ts.ss0 = SEG_KDATA << 3;
+    mycpu()->ts.esp0 = (uint)p->kstack + KSTACKSIZE;
+    // setting IOPL=0 i eflags *and* iomb beyond the tss segment limit
+    // forbids I/O instructions (e.g., inb and outb) from user space
+    mycpu()->ts.iomb = (ushort) 0xFFFF;
+    ltr(SEG_TSS << 3);
+    lcr3(V2P(p->pgdir));    // switch to process's address space
+    popcli();
+}
+
+// load the initcode into address 0 of pgdir, sz must be less than a page.
+void
+inituvm(pde_t *pgdir, char *init, uint sz)
+{
+    char *mem;
+
+    if (sz >= PGSIZE)
+        panic("inituvm: initcode more than a page");
+    mem = kalloc();
+    memset(mem, 0, PGSIZE);
+    mappages(pgdir, 0, PGSIZE, V2P(mem), PTE_W | PTE_U);
+    memmove(mem, init, sz);
+}
+
+// load a program segment into pgdir. addr must be page-aligned and
+// the pages from addr to addr+sz must already be mapped.
+//int
+//loaduvm(pde_t* *pgdir, char *addr, struct inode *ip, uint offset, uint sz)
+//{
+//    uint i, pa, n;
+//    pte_t *pte;
+//
+//    if ((uint)addr % PGSIZE != 0)
+//        panic("loaduvm: addr must be page aligned");
+//    for (i = )
+//}
 
 // deallocate user pages to bring the process size from oldsz to newsz.
 // oldsz and newsz need not e page-aligned, nor does newsz need to be less than oldsz.

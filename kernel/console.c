@@ -87,7 +87,7 @@ consoleintr(int (*getc)(void))
 {
     int c, doprocdump = 0;
 
-    //    acquire(&cons.lock);
+    acquire(&cons.lock);
     while ((c = getc()) >= 0) {
         switch (c) {
             // process listing
@@ -122,7 +122,7 @@ consoleintr(int (*getc)(void))
                 break;
         }
     }
-//    release(&cons.lock);
+    release(&cons.lock);
     if(doprocdump) {
 //        procdump();  // now call procdump() wo. cons.lock held
     }

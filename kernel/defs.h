@@ -3,11 +3,20 @@
 
 #include "types.h"
 
+struct context;
 struct rtcdata;
 struct spinlock;
+struct sleeplock;
+struct inode;
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
+
+// bio.c
+//void            binit(void);
+//struct buf*     bread(uint, uint);
+//void            brelse(struct buf*);
+//void            bwrite(struct buf*);
 
 // cga.c
 void            cgainit();
@@ -18,6 +27,12 @@ void            consoleinit(void);
 void            cprintf(char *, ...);
 void            consoleintr(int(*)(void));
 void            panic(char*) __attribute__((noreturn));
+
+
+// ide.c
+//void            ideinit(void);
+//void            indintr(void);
+//void            iderw(struct buf*);
 
 // ioapic.c
 void            ioapicenable(int irq, int cpu);
@@ -55,6 +70,22 @@ void            picinit(void);
 // proc.c
 int             cpuid(void);
 struct cpu*     mycpu(void);
+struct proc*    myproc(void);
+void            pinit(void);
+void            scheduler(void) __attribute__((noreturn));
+void            sched(void);
+void            yield(void);
+void            sleep(void*, struct spinlock*);
+void            wakeup(void*);
+int             kill(int pid);
+
+void            userinit(void);
+int             fork(void);
+void            setproc(struct proc*);
+void            exit(void);
+int             growproc(int);
+void            procdump(void);
+
 
 // string.c
 int             memcmp(const void*, const void*, uint);
@@ -65,6 +96,9 @@ int             strlen(const char*);
 int             strncmp(const char*, const char*, uint);
 char*           strncpy(char*, const char*, int);
 
+// swtch.S
+void            swtch(struct context**, struct context*);
+
 // spinlock.c
 void            initlock(struct spinlock*, char*);
 void            getcallerpcs(void*, uint*);
@@ -74,11 +108,17 @@ void            release(struct spinlock*);
 void            pushcli(void);
 void            popcli(void);
 
+// sleeplock.c
+void            initsleeplock(struct sleeplock*, char*);
+void            acquiresleep(struct sleeplock*);
+void            releasesleep(struct sleeplock*);
+void            holdingsleep(struct sleeplock*);
+
 // trap.c
 void            idtinit(void);
 extern uint     ticks;
 void            tvinit(void);
-//extern struct spinlock ticklock;
+extern struct spinlock ticklock;
 
 // uart.c
 void            uartinit(void);
@@ -93,9 +133,9 @@ char*           uva2ka(pde_t*, char*);
 int             allocuvm(pde_t*, uint, uint);
 void            freevm(pde_t*);
 void            inituvm(pde_t*, char*, uint);
-//int             loaduvm(pde_t*, char *, struct inode*, uint, uint);
+int             loaduvm(pde_t*, char *, struct inode*, uint, uint);
 pde_t*          copyuvm(pde_t*, uint);
-//void            switchuvm(struct proc*);
+void            switchuvm(struct proc*);
 void            switchkvm(void);
 int             copyout(pde_t*, uint, void*, uint);
 void            clearpteu(pde_t *pgdir, char *uva);
