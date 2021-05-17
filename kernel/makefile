@@ -8,6 +8,7 @@ OBJS = \
 	spinlock.o\
 	sleeplock.o\
 	ide.o\
+	bio.o\
 	kalloc.o\
 	swtch.o\
 	proc.o\

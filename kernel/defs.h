@@ -14,10 +14,10 @@ struct buf;
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
 
 // bio.c
-//void            binit(void);
-//struct buf*     bread(uint, uint);
-//void            brelse(struct buf*);
-//void            bwrite(struct buf*);
+void            binit(void);
+struct buf*     bread(uint, uint);
+void            brelse(struct buf*);
+void            bwrite(struct buf*);
 
 // cga.c
 void            cgainit();

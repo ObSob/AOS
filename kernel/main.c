@@ -24,7 +24,7 @@ int main(void)
     consoleinit();  // console hardware
     pinit();         // process table
     tvinit();       // trap vectors
-//    binit();         // buffer cache
+    binit();         // buffer cache
 //    fileinit();      // file table
     ideinit();       // disk
     startothers();   // start other processors
