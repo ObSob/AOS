@@ -40,14 +40,14 @@ trap(struct trapframe *tf)
             if(cpuid() == 0){
                 acquire(&tickslock);
                 ticks++;
-    //            wakeup(&ticks);
+                wakeup(&ticks);
                 release(&tickslock);
             }
             cprintf("trap: this is a tick interrupt\n");
             lapiceoi();
             break;
         case T_IRQ0 + IRQ_IDE:
-//            ideintr();    // todo: need IDE support
+            ideintr();
             lapiceoi();
             break;
         case T_IRQ0 + IRQ_IDE + 1:
@@ -69,7 +69,7 @@ trap(struct trapframe *tf)
             break;
         default:
             // todo: unknown interrupt, print error information here
-            cprintf("trap: unknown interrupt number: %d\n", tf->trapno);
+            cprintf("trap: unknown interrupt number: 0x%x\n", tf->trapno);
     }
 
     // todo: deal with proc relevant operation

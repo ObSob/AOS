@@ -6,6 +6,8 @@ OBJS = \
 	picirq.o\
 	mp.o\
 	spinlock.o\
+	sleeplock.o\
+	ide.o\
 	kalloc.o\
 	swtch.o\
 	proc.o\

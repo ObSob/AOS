@@ -26,10 +26,12 @@ int main(void)
     tvinit();       // trap vectors
 //    binit();         // buffer cache
 //    fileinit();      // file table
-//    ideinit();       // disk
+    ideinit();       // disk
     startothers();   // start other processors
     kinit2(P2V(4 * 1024 * 1024), P2V(PHYSTOP)); // init after SMP init
 //    userinit();      // first user
+
+
 
     mpmain(1);
 }
@@ -55,7 +57,7 @@ mpmain(int bsp)
         asm volatile("hlt");
     }
 
-    // todo: need proc support
+    // todo: need user space support
 //    scheduler();     // start running processes
 }
 

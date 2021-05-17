@@ -1,6 +1,6 @@
-#include "types.h"
 #include "sleeplock.h"
 #include "defs.h"
+#include "proc.h"
 
 void
 initsleeplock(struct sleeplock *lk, char *name)
@@ -21,4 +21,24 @@ acquiresleep(struct sleeplock *lk)
     lk->locked = 1;
     lk->pid = myproc()->pid;
     release(&lk->lk);
+}
+
+void
+releasesleep(struct sleeplock *lk)
+{
+    acquire(&lk->lk);
+    lk->locked = 0;
+    lk->pid = 0;
+    release(&lk->lk);
+}
+
+int
+holdingsleep(struct sleeplock *lk)
+{
+    int r;
+
+    acquire(&lk->lk);
+    r = lk->locked && (lk->pid == myproc()->pid);
+    release(&lk->lk);
+    return r;
 }

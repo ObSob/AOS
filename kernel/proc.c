@@ -161,6 +161,7 @@ scheduler(void)
             // it should have changed its p->state before coming back
             c->proc = 0;
         }
+        cprintf("no proc runnable\n");
         release(&ptable.lock);
     }
 }

@@ -8,6 +8,7 @@ struct rtcdata;
 struct spinlock;
 struct sleeplock;
 struct inode;
+struct buf;
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
@@ -30,9 +31,10 @@ void            panic(char*) __attribute__((noreturn));
 
 
 // ide.c
-//void            ideinit(void);
-//void            indintr(void);
-//void            iderw(struct buf*);
+void            ideinit(void);
+void            ideintr(void);
+void            iderw(struct buf*);
+void            idetest(void);
 
 // ioapic.c
 void            ioapicenable(int irq, int cpu);
@@ -112,7 +114,7 @@ void            popcli(void);
 void            initsleeplock(struct sleeplock*, char*);
 void            acquiresleep(struct sleeplock*);
 void            releasesleep(struct sleeplock*);
-void            holdingsleep(struct sleeplock*);
+int             holdingsleep(struct sleeplock*);
 
 // trap.c
 void            idtinit(void);
