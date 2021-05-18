@@ -42,12 +42,14 @@ void            iput(struct inode*);
 void            iunlock(struct inode*);
 void            iunlockput(struct inode*);
 void            iupdate(struct inode*);
-void            namecmp(const char*, const char*);
-struct inode*   namei(const char*, const char*);
+int             namecmp(const char*, const char*);
+struct inode*   namei(char*);
 struct inode*   nameiparent(char*, char*);
 int             readi(struct inode*, char*, uint, uint);
-//void            stati(struct inode*, struct stat*);
+void            stati(struct inode*, struct stat*);
 int             writei(struct inode*, char*, uint, uint);
+int             dirlink(struct inode*, char*, uint);
+struct inode*   dirlookup(struct inode*, char*, uint*);
 
 // ide.c
 void            ideinit(void);
