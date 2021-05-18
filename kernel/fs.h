@@ -2,7 +2,7 @@
 #define AOS_FS_H
 
 #define ROOTINO 1   // root i-number
-#define BSIZE   512 // block size
+#define BSIZE   512 // block size (byte, not bit)
 
 // disk layout:
 //  [ boot block | super block | log | inode blocks | free bit map | data blocks]
@@ -21,7 +21,7 @@ struct superblock {
 
 #define NDIRECT     12
 #define NINDIRECT   (BSIZE/sizeof(uint))
-#define MAXFILE     (NNIRECT+NINDIRECT)
+#define MAXFILE     (NDIRECT+NINDIRECT)
 
 
 // on-disk inode structure
@@ -44,7 +44,7 @@ struct dinode {
 #define BPB           (BSIZE*8)
 
 // Block of free map containing bit for block b
-#define BBLOCK(b, sb) (b/BPB + sb.bmapstart)
+#define BBLOCK(b, sb) ((b)/BPB + (sb).bmapstart)
 
 // Directory is a file containing a sequence of dirent structures.
 #define DIRSIZ 14

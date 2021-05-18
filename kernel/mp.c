@@ -1,3 +1,7 @@
+#include "types.h"
+#include "param.h"
+#include "asm.h"
+#include "mmu.h"
 #include "proc.h"
 #include "memlayout.h"
 #include "defs.h"

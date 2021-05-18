@@ -1,7 +1,7 @@
-#ifndef AOS_DATA_H
-#define AOS_DATA_H
+#ifndef AOS_DATE_H
+#define AOS_DATE_H
 
-struct rtcdata {
+struct rtcdate {
     uint second;
     uint minute;
     uint hour;
@@ -10,4 +10,4 @@ struct rtcdata {
     uint year;
 };
 
-#endif //AOS_DATA_H
+#endif //AOS_DATE_H

@@ -1,9 +1,11 @@
 #include "types.h"
 #include "defs.h"
-#include "mmu.h"
+#include "param.h"
 #include "memlayout.h"
+#include "mmu.h"
 #include "proc.h"
 #include "x86.h"
+
 
 static void startothers(void);
 static void mpmain(int bsp) __attribute((noreturn));

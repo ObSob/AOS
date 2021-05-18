@@ -3,8 +3,6 @@
 
 // Routines to let C code use special x86 instructions.
 
-#include "types.h"
-
 static inline uchar
 inb(ushort port)
 {

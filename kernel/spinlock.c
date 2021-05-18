@@ -1,8 +1,11 @@
+#include "types.h"
 #include "defs.h"
-#include "spinlock.h"
+#include "param.h"
 #include "x86.h"
-#include "proc.h"
 #include "memlayout.h"
+#include "mmu.h"
+#include "proc.h"
+#include "spinlock.h"
 
 void
 initlock(struct spinlock *lk, char *name)

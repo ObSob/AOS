@@ -3,8 +3,8 @@
 #include "traps.h"
 #include "x86.h"
 #include "memlayout.h"
+#include "date.h"
 #include "defs.h"
-#include "data.h"
 
 
 // Local APIC registers, divided by 4 for use as uint[] indices.
@@ -176,7 +176,7 @@ cmos_read(uint reg)
 }
 
 static void
-fill_rtcdata(struct rtcdata *r)
+fill_rtcdata(struct rtcdate *r)
 {
     r->second = cmos_read(SECS);
     r->minute = cmos_read(MINS);
@@ -188,9 +188,9 @@ fill_rtcdata(struct rtcdata *r)
 
 // qemu seems to use 24-hour GWT and the values are BCD encoded
 void
-cmostime(struct rtcdata * r)
+cmostime(struct rtcdate * r)
 {
-    struct rtcdata t1, t2;
+    struct rtcdate t1, t2;
     int sb, bcd;
 
     sb = cmos_read((CMOS_STATA) & CMOS_UIP);

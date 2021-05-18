@@ -1,4 +1,6 @@
+#include "types.h"
 #include "x86.h"
+#include "date.h"
 #include "defs.h"
 
 #define IO_PIC1     0x20    // master (IRQS 0-7)

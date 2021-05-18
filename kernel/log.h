@@ -1,10 +1,6 @@
 #ifndef AOS_LOG_H
 #define AOS_LOG_H
 
-#include "types.h"
-#include "param.h"
-#include "spinlock.h"
-
 // contents of the header block, used for both the on-disk header block
 // and to keep track in memory of logged block# before commit.
 struct logheader {

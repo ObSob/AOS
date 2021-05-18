@@ -1,8 +1,6 @@
 #ifndef AOS_SLEEPLOCK_H
 #define AOS_SLEEPLOCK_H
 
-#include "spinlock.h"
-
 // long-term locks for processes
 struct sleeplock {
     uint locked;        // is the lock held?

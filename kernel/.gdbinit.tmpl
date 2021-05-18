@@ -25,6 +25,5 @@ target remote localhost:1234
 echo + symbol-file kernel\n
 set architecture i386
 file kernel
-b console.c:53
-b printint
+b log.c:42
 layout split

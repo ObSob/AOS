@@ -1,11 +1,6 @@
 #ifndef AOS_PROC_H
 #define AOS_PROC_H
 
-#include "types.h"
-#include "mmu.h"
-#include "param.h"
-
-
 // CPUS state
 struct cpu {
     uchar apicid;               // local APIC ID

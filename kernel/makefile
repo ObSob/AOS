@@ -11,6 +11,7 @@ OBJS = \
 	bio.o\
 	log.o\
 	fs.o\
+	file.o\
 	kalloc.o\
 	swtch.o\
 	proc.o\

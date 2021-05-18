@@ -1,3 +1,4 @@
+#include "types.h"
 #include "memlayout.h"
 #include "x86.h"
 #include "defs.h"

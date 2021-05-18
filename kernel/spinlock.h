@@ -1,8 +1,6 @@
 #ifndef AOS_SPINLOCK_H
 #define AOS_SPINLOCK_H
 
-#include "types.h"
-
 // mutual exclusion lock, reentrant lock
 struct spinlock {
     uint locked;        // is the lock held;

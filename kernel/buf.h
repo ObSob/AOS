@@ -1,9 +1,6 @@
 #ifndef AOS_BUF_H
 #define AOS_BUF_H
 
-#include "sleeplock.h"
-#include "fs.h"
-
 struct buf {
     int flags;
     uint dev;

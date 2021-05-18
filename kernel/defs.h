@@ -1,14 +1,16 @@
 #ifndef AOS_DEFS_H
 #define AOS_DEFS_H
 
-#include "types.h"
-
+struct buf;
 struct context;
-struct rtcdata;
+struct file;
+struct inode;
+struct pipe;
+struct proc;
+struct rtcdate;
 struct spinlock;
 struct sleeplock;
-struct inode;
-struct buf;
+struct stat;
 struct superblock;
 
 // number of elements in fixed-size array
@@ -31,8 +33,21 @@ void            consoleintr(int(*)(void));
 void            panic(char*) __attribute__((noreturn));
 
 // fs.c
-void            readsb(int dev, struct superblock *sb);
-
+void            readsb(int dev, struct superblock *superblock);
+struct inode*   ialloc(uint, short);
+struct inode*   idup(struct inode*);
+void            iinit(int dev);
+void            ilock(struct inode*);
+void            iput(struct inode*);
+void            iunlock(struct inode*);
+void            iunlockput(struct inode*);
+void            iupdate(struct inode*);
+void            namecmp(const char*, const char*);
+struct inode*   namei(const char*, const char*);
+struct inode*   nameiparent(char*, char*);
+int             readi(struct inode*, char*, uint, uint);
+//void            stati(struct inode*, struct stat*);
+int             writei(struct inode*, char*, uint, uint);
 
 // ide.c
 void            ideinit(void);
@@ -56,7 +71,7 @@ void            kinit2(void *, void *);
 void            kbdintr(void);
 
 // lapic.c
-void            cmostime(struct rtcdata *r);
+void            cmostime(struct rtcdate *r);
 int             lapicid(void);
 extern volatile uint*   lapic;
 void            lapiceoi(void);

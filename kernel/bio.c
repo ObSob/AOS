@@ -16,10 +16,13 @@
 // * B_VALID: the buffer data has been read from the disk
 // * B_DIRTY: the buffer data has been modified and needs to be written to disk
 
-#include "spinlock.h"
-#include "param.h"
-#include "buf.h"
+#include "types.h"
 #include "defs.h"
+#include "param.h"
+#include "spinlock.h"
+#include "sleeplock.h"
+#include "fs.h"
+#include "buf.h"
 
 struct {
     struct spinlock lock;
