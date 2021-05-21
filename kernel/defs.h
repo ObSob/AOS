@@ -12,6 +12,7 @@ struct spinlock;
 struct sleeplock;
 struct stat;
 struct superblock;
+struct file;
 
 // number of elements in fixed-size array
 #define NELEM(x) (sizeof(x)/sizeof((x)[0]))
@@ -31,6 +32,15 @@ void            consoleinit(void);
 void            cprintf(char *, ...);
 void            consoleintr(int(*)(void));
 void            panic(char*) __attribute__((noreturn));
+
+// file.c
+void            fileinit(void);
+struct file*    filealloc(void);
+struct file*    fileup(struct file*);
+void            fileclose(struct file*);
+int             fileread(struct file*, char*, int n);
+int             filewrite(struct file*, char*, int n);
+int             filestat(struct file*, struct stat*);
 
 // fs.c
 void            readsb(int dev, struct superblock *superblock);
